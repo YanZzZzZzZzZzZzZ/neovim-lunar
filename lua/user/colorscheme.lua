@@ -18,7 +18,7 @@ local themes = {
 }
 
 lvim.transparent_window = true
-lvim.colorscheme = "onedark_vivid"
+lvim.colorscheme = "edge"
 
 local extra_opts = {
   sonokai = {

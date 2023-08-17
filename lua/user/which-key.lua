@@ -48,20 +48,36 @@ wk.mappings["W"] = {
   s = { ":lua require('telescope-tabs').list_tabs()<cr>", 'Search Tabs' },
 }
 
-wk.mappings["G"] = {
-  name = ' ' .. kind.icons.hint .. " Github Copilot",
-  a = { ":lua require('copilot.suggestion').accept()<cr>", "Accept" },
-  n = { ":lua require('copilot.suggestion').next()<cr>", "Next" },
-  N = { ":lua require('copilot.suggestion').prev()<cr>", "Prev" },
-  d = { ":lua require('copilot.suggestion').dismiss()<cr>", "Dismiss" },
-  t = { ":lua require('copilot.suggestion').toggle_auto_trigger()<cr>", "Toggle Auto Trigger" },
-}
+-- wk.mappings["G"] = {
+--   name = ' ' .. kind.icons.hint .. " Github Copilot",
+--   a = { ":lua require('copilot.suggestion').accept()<cr>", "Accept" },
+--   n = { ":lua require('copilot.suggestion').next()<cr>", "Next" },
+--   N = { ":lua require('copilot.suggestion').prev()<cr>", "Prev" },
+--   d = { ":lua require('copilot.suggestion').dismiss()<cr>", "Dismiss" },
+--   t = { ":lua require('copilot.suggestion').toggle_auto_trigger()<cr>", "Toggle Auto Trigger" },
+-- }
 
-wk.mappings['x'] = { ":xa<cr>", "Save All and Quit", }
+-- wk.mappings['x'] = { ":xa<cr>", "Save All and Quit", }
 
 wk.mappings["t"] = {
   name = ' Telescope',
   p = { ':Telescope projects<cr>', 'Projects' }, -- requires telescope-project.nvim plugin
   r = { ':Telescope resume<cr>', 'Resume' },
-  g = { ':Telescope live_grep<cr>', 'Search for file' }
+  g = { ':Telescope live_grep<cr>', 'Search for file' },
+  t = { ':Telescope<cr>' }
+}
+
+wk.mappings[","] = {
+  name = "Lspsaga",
+  n = {':Lspsaga diagnostic_jump_next<cr>', 'Next Diagnoses'},
+  p = {':Lspsaga diagnostic_jump_prev<cr>', 'Prev Diagnoses'},
+  f = {':Lspsaga finder<cr>', "Lsp finder"},
+  o = {':Lspsaga outline<cr>', "Lsp outline"},
+  s = {":Lspsaga signature_help<cr>", "Signature Help"},
+  d = {":Lspsaga peek_definition<cr>", "Preview Definition"},
+  r = {":Lspsaga rename<cr>", "Rename"},
+  a = {":Lspsaga code_action<cr>", "Saga Code Action"},
+  g = {":Lspsaga goto_definition<cr>", "Saga go to Definition"},
+  R = {":Lspsaga project_replace", "Project replace args"},
+  c = {":Lspsaga show_cursor_diagnostic<cr>", "Cursor diagnostics"}
 }

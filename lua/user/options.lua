@@ -18,6 +18,7 @@ lvim.builtin.telescope.defaults.layout_config = {
   width = 0.8
 }
 
+
 -- nvim-tree setup
 -- lvim.builtin.nvimtree.setup.filters.dotfiles = true
 
@@ -60,6 +61,23 @@ lvim.format_on_save = true
 vim.o.linebreak = true
 vim.opt.wrap = true
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.relativenumber = true
+
+vim.o.so = 25
+
+vim.api.nvim_create_autocmd("InsertEnter", {
+  pattern = "*",
+  callback = function()
+    vim.o.relativenumber = false
+  end
+})
+
+vim.api.nvim_create_autocmd(("InsertLeave"), {
+  pattern = "*",
+  callback = function()
+    vim.o.relativenumber = true
+  end
+})
 
 lvim.builtin.telescope.defaults.path_display = {
   shorten = 4,

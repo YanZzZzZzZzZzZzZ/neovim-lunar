@@ -1,50 +1,205 @@
-local gitsigns = {
-  "lewis6991/gitsigns.nvim",
-  config = function()
-    require('gitsigns').setup {
-      signs                        = {
-        add          = { text = '+' },
-        change       = { text = '~' },
-        delete       = { text = '-' },
-        topdelete    = { text = '‾' },
-        changedelete = { text = '_' },
-        untracked    = { text = '┆' },
-      },
-      signcolumn                   = true,  -- Toggle with `:Gitsigns toggle_signs`
-      numhl                        = false, -- Toggle with `:Gitsigns toggle_numhl`
-      linehl                       = false, -- Toggle with `:Gitsigns toggle_linehl`
-      word_diff                    = false, -- Toggle with `:Gitsigns toggle_word_diff`
-      watch_gitdir                 = {
-        follow_files = true
-      },
-      attach_to_untracked          = true,
-      current_line_blame           = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
-      current_line_blame_opts      = {
-        virt_text = true,
-        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-        delay = 1000,
-        ignore_whitespace = false,
-      },
-      current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
-      sign_priority                = 6,
-      update_debounce              = 100,
-      status_formatter             = nil,   -- Use default
-      max_file_length              = 40000, -- Disable if file is longer than this (in lines)
-      preview_config               = {
-        -- Options passed to nvim_open_win
-        border = 'single',
-        style = 'minimal',
-        relative = 'cursor',
-        row = 0,
-        col = 1
-      },
-      yadm                         = {
-        enable = false
-      },
-    }
-  end
+local barbar = {
+  'romgrk/barbar.nvim',
+  dependencies = {
+    'lewis6991/gitsigns.nvim',     -- OPTIONAL: for git status
+    'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
+  },
+  init = function() vim.g.barbar_auto_setup = false end,
+  opts = {
+    -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
+    -- animation = true,
+    -- insert_at_start = true,
+    -- …etc.
+  },
+  version = '^1.0.0', -- optional: only update when a new 1.x version is released
 }
 
+local cheatsheet =
+{
+  'doctorfree/cheatsheet.nvim',
+  event = "VeryLazy",
+  dependencies = {
+    { "nvim-telescope/telescope.nvim" },
+    { "nvim-lua/popup.nvim" },
+    { "nvim-lua/plenary.nvim" },
+  },
+  config = function()
+    local ctactions = require("cheatsheet.telescope.actions")
+    require("cheatsheet").setup({
+      bundled_cheetsheets = {
+        enabled = {
+          "default",
+          "lua",
+          "markdown",
+          "regex",
+          "netrw",
+          "unicode",
+        },
+        disabled = { "nerd-fonts" },
+      },
+      bundled_plugin_cheatsheets = {
+        enabled = {
+          "auto-session",
+          "goto-preview",
+          "telescope.nvim",
+          "vim-easy-align",
+          "vim-sandwich",
+        },
+        disabled = { "gitsigns" },
+      },
+      include_only_installed_plugins = true,
+      telescope_mappings = {
+        ["<CR>"] = ctactions.select_or_fill_commandline,
+        ["<A-CR>"] = ctactions.select_or_execute,
+        ["<C-Y>"] = ctactions.copy_cheat_value,
+        ["<C-E>"] = ctactions.edit_user_cheatsheet,
+      },
+    })
+  end,
+}
+
+local neoclip = {
+  "AckslD/nvim-neoclip.lua",
+  dependencies = {
+    -- you'll need at least one of these
+    { 'nvim-telescope/telescope.nvim' },
+    -- {'ibhagwan/fzf-lua'},
+  },
+  config = function()
+    require('neoclip').setup()
+  end,
+}
+
+local trouble = {
+  "folke/trouble.nvim",
+  dependencies = { "nvim-tree/nvim-web-devicons" },
+  opts = {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  },
+}
+
+local ls_lines = {
+  "Maan2003/lsp_lines.nvim",
+  config = function()
+    require("lsp_lines").setup()
+  end,
+}
+
+local lsp_signiture = {
+  "ray-x/lsp_signature.nvim",
+  event = "VeryLazy",
+  opts = {
+    bind = true, -- This is mandatory, otherwise border config won't get registered.
+    handler_opts = {
+        border = 'rounded',
+    },
+  },
+  config = function(_, opts) require 'lsp_signature'.setup(opts) end
+}
+
+local lspsaga = {
+  'nvimdev/lspsaga.nvim',
+  config = function()
+    require('lspsaga').setup({
+      ui = {
+        -- Currently, only the round theme exists
+        theme = 'round',
+        -- This option only works in Neovim 0.9
+        title = true,
+        -- Border type can be single, double, rounded, solid, shadow.
+        border = 'rounded',
+        winblend = 0,
+        expand = '',
+        collapse = '',
+        preview = ' ',
+        code_action = '💡',
+        diagnostic = '🐞',
+        incoming = ' ',
+        outgoing = ' ',
+        hover = ' ',
+        kind = {},
+      },
+    })
+  end,
+  dependencies = {
+    'nvim-treesitter/nvim-treesitter', -- optional
+    'nvim-tree/nvim-web-devicons'      -- optional
+  }
+}
+
+local legendary = {
+  'mrjones2014/legendary.nvim',
+  -- since legendary.nvim handles all your keymaps/commands,
+  -- its recommended to load legendary.nvim before other plugins
+  priority = 10000,
+  lazy = false,
+  -- sqlite is only needed if you want to use frecency sorting
+  -- dependencies = { 'kkharji/sqlite.lua' }
+}
+
+local dressing = {
+  config = function()
+    require('dressing').setup({
+      win_options = {
+        -- Window transparency (0-100)
+        winblend = 10,
+        -- Change default highlight groups (see :help winhl)
+        winhighlight =
+        'Normal:DressingInputNormalFloat,NormalFloat:DressingInputNormalFloat,FloatBorder:DressingInputFloatBorder',
+      },
+      input = {
+        -- Set to false to disable the vim.ui.input implementation
+        enabled = true,
+
+        -- Default prompt string
+        default_prompt = 'Input:',
+
+        -- Can be 'left', 'right', or 'center'
+        prompt_align = 'left',
+
+        -- When true, <Esc> will close the modal
+        insert_only = true,
+
+        -- When true, input will start in insert mode.
+        start_in_insert = true,
+
+        -- These are passed to nvim_open_win
+        border = 'rounded',
+        -- 'editor' and 'win' will default to being centered
+        relative = 'cursor',
+
+        -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+        prefer_width = 40,
+        width = nil,
+        -- min_width and max_width can be a list of mixed types.
+        -- min_width = {20, 0.2} means "the greater of 20 columns or 20% of total"
+        max_width = { 140, 0.9 },
+        min_width = { 20, 0.2 },
+
+        override = function(conf)
+          -- This is the config that will be passed to nvim_open_win.
+          -- Change values here to customize the layout
+          return conf
+        end,
+
+        -- see :help dressing_get_config
+        get_config = nil,
+      },
+      select = {
+        -- Set to false to disable the vim.ui.select implementation
+        enabled = true,
+
+        -- Priority list of preferred vim.select implementations
+        backend = { 'telescope', 'fzf_lua', 'fzf', 'builtin', 'nui' },
+
+        -- Trim trailing `:` from prompt
+        trim_prompt = true,
+      },
+    })
+  end
+}
 lvim.plugins = {
   {
     "zbirenbaum/copilot.lua",
@@ -94,13 +249,16 @@ lvim.plugins = {
   },
 
   { "tpope/vim-surround" },
+
   { "felipec/vim-sanegx", event = "BufRead" },
+
   {
     "windwp/nvim-ts-autotag",
     config = function()
       require("nvim-ts-autotag").setup()
     end,
   },
+
   { "tpope/vim-repeat" },
 
   { "ThePrimeagen/harpoon" },
@@ -347,12 +505,26 @@ lvim.plugins = {
 
   {
     "rcarriga/nvim-notify",
+    dependencies = {
+      "nvim-lua/plenary.nvim", -- required
+    },
     config = function()
+      local async = require('plenary.async')
       local notify = require('notify')
-      vim.notify = notify
-      lvim.notify = notify
+      notify.setup({
+        background_colour = "#ba4444"
+      })
+      notify = notify.async
+      local ntfunc = function(message, config)
+        async.run(function()
+          notify(message, config)
+        end)
+      end
+      vim.notify = ntfunc
+      lvim.notify = ntfunc
     end
   },
+
 
   {
     "folke/noice.nvim",
@@ -429,33 +601,127 @@ lvim.plugins = {
     "junegunn/gv.vim",
     lazy = false,
   },
-
+  -- Lua
   {
-    'echasnovski/mini.animate',
-    version = false,
+    "folke/twilight.nvim",
     config = function()
-      require('mini.animate').setup({})
+      require('twilight').setup({
+        dimming = {
+          alpha = 0.4, -- amount of dimming
+          -- we try to get the foreground from the highlight groups or fallback color
+          color = { "Normal", "#ffffff" },
+          term_bg = "#000000", -- if guibg=NONE, this will be used to calculate text color
+          inactive = false,    -- when true, other windows will be fully dimmed (unless they contain the same buffer)
+        },
+        context = 10,          -- amount of lines we will try to show around the current line
+        treesitter = true,     -- use treesitter when available for the filetype
+        -- treesitter is used to automatically expand the visible text,
+        -- but you can further control the types of nodes that should always be fully expanded
+        expand = { -- for treesitter, we we always try to expand to the top-most ancestor with these types
+          "function",
+          "method",
+          "table",
+          "if_statement",
+        },
+        exclude = {}, -- exclude these filetypes
+      })
+    end
+
+  },
+
+  -- {
+  --   'echasnovski/mini.animate',
+  --   version = false,
+  --   config = function()
+  --     require('mini.animate').setup({})
+  --   end
+  -- },
+
+  -- {
+  --   'echasnovski/mini.indentscope',
+  --   version = false,
+  --   config = function() require('mini.indentscope').setup() end
+  -- },
+
+  -- nvim-treesitter setup
+  { 'nvim-treesitter/nvim-treesitter-refactor' },
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    config = function()
+      require("treesitter-context").setup({
+
+        enable = true,        -- Enable this plugin (Can be enabled/disabled later via commands)
+        max_lines = 0,        -- How many lines the window should span. Values <= 0 mean no limit.
+        trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+        patterns = {          -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+          -- For all filetypes
+          -- Note that setting an entry here replaces all other patterns for this entry.
+          -- By setting the 'default' entry below, you can control which nodes you want to
+          -- appear in the context window.
+          default = {
+            'class',
+            'function',
+            'method',
+            'for',
+            'while',
+            'if',
+            'switch',
+            'case',
+          },
+          -- Example for a specific filetype.
+          -- If a pattern is missing, *open a PR* so everyone can benefit.
+          --   rust = {
+          --       'impl_item',
+          --   },
+        },
+        exact_patterns = {
+          -- Example for a specific filetype with Lua patterns
+          -- Treat patterns.rust as a Lua pattern (i.e "^impl_item$" will
+          -- exactly match "impl_item" only)
+          -- rust = true,
+        },
+
+        -- [!] The options below are exposed but shouldn't require your attention,
+        --     you can safely ignore them.
+
+        zindex = 20,     -- The Z-index of the context window
+        mode = 'cursor', -- Line used to calculate context. Choices: 'cursor', 'topline'
+      })
     end
   },
+  { 'nvim-treesitter/nvim-treesitter-textobjects' },
+  { 'RRethy/nvim-treesitter-endwise' },
+  { 'RRethy/nvim-treesitter-textsubjects' },
 
-  {
-    'echasnovski/mini.indentscope',
-    version = false,
-    config = function() require('mini.indentscope').setup() end
-  },
+  cheatsheet,
 
-  gitsigns,
+  barbar,
+
+  neoclip,
+
+  trouble,
+
+  ls_lines,
+
+  lspsaga,
+
+  lsp_signiture,
+
+  dressing,
+
+  legendary,
 }
 
-table.insert(lvim.plugins, {
-  "zbirenbaum/copilot-cmp",
-  event = "InsertEnter",
-  dependencies = { "zbirenbaum/copilot.lua" },
-  config = function()
-    local ok, cmp = pcall(require, "copilot_cmp")
-    if ok then cmp.setup({}) end
-  end,
-})
+
+-- table.insert(lvim.plugins, {
+--   "zbirenbaum/copilot-cmp",
+--   event = "InsertEnter",
+--   dependencies = { "zbirenbaum/copilot.lua" },
+--   config = function()
+--     local ok, cmp = pcall(require, "copilot_cmp")
+--     if ok then cmp.setup({}) end
+--   end,
+-- })
 
 lvim.builtin.telescope.on_config_done = function(telescope)
   pcall(telescope.load_extension, "frecency")
